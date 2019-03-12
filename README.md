@@ -3,17 +3,17 @@
 
 ## Update Raspberry Firmware
 
-'''
+```
 sudo apt-get install rpi-update
 sudo rpi-update
-'''
+```
 
 ## Update Raspberry Pi Dependencies
 
-'''
+```
 sudo apt-get update
 sudo apt-get upgrade
-'''
+```
 
 AND
 
@@ -21,15 +21,15 @@ Setup regular automatic updates, run the following commands:
 
 Obtain superuser privlidges
 
-'
+```
 sudo su
-'
+```
 
 #Edit the superuser crontab
 
-'
+```
 crontab e
-'
+```
 
 #Add the following lines to the file
 #This will run the commands at 1PM every Sunday
