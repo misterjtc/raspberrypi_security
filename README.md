@@ -1,7 +1,7 @@
 # How to Install and Configure Motion on RaspberryPi
 =============
 
-## (OPTIONAL) Configure headless access
+## (OPTIONAL) Configure Headless Access
 
 To allow remote access by default, we need to enable ssh. This can be done by the following:
 
@@ -34,14 +34,14 @@ network={
 
 including the quotes!
 
-## Update RaspberryPi firmware
+## Update RaspberryPi Firmware
 
 ```
 sudo apt-get install rpi-update
 sudo rpi-update
 ```
 
-## Update RaspberryPi dependencies
+## Update RaspberryPi Dependencies
 
 ```
 sudo apt-get update
@@ -72,7 +72,7 @@ Add the following lines to the file. This will run the commands at 1PM every Sun
 
 For more information see here: [Crontab Ref](https://www.raspberrypi.org/documentation/linux/usage/cron.md)
 
-## Configure general RaspberryPi settings
+## Configure General RaspberryPi Settings
 
 Once connected to the RaspberryPi, run the following command to open raspi-config
 
@@ -132,7 +132,7 @@ The notable modifications to this file are the following:
 11. Set locate_motion_style to redbox
 12. Set text_changes to on
 
-## Enable the motion daemon:
+## Enable the Motion Daemon:
 
 ```
 sudo nano /etc/default/motion
@@ -140,7 +140,7 @@ sudo nano /etc/default/motion
 
 Set 'start_motion_daemon' to yes.
 
-## Restart motion and test!
+## Restart Motion and Test!
 
 After we finish editing our configuration, we need to restart the motion service. Use the following command:
 
@@ -183,7 +183,36 @@ and add the following line to the bottom of the file
 Using NFS:
 
 ```
-192.168.86.2:/mnt/user/Pi_Cam/Camera1 /home/pi/PiCam nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0 
+192.168.86.2:/mnt/user/Pi_Cam/Camera2 /home/pi/PiCam nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0 
 
 ```
 
+## (Optional) Send a Slack Notification When Motion is Detected
+
+You can configure MotionEye OS to send a slack notification whenever any camera detects motion.
+
+This uses a python script created by Wesley Archer at Raspberry Coulis. You can find a base version of the script in the slack.py file or see his Github Repo below:
+
+For more information see here: [raspberrycoulis/slack-motioneyeos-notifications](https://github.com/raspberrycoulis/slack-motioneyeos-notifications)
+
+## (Optional) Using Docker? How to Access the Container.
+
+SSH into your server.
+
+Use the following command to see all existing docker containers:
+
+```
+docker ps
+```
+
+To ssh into a specific container, use the following command:
+
+```
+docker exec -it <container name> /bin/bash
+```
+
+In my case this is:
+
+```
+docker exec -it MotionEye /bin/bash
+```
