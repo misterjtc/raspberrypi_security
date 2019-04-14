@@ -7,21 +7,21 @@ To allow remote access by default, we need to enable ssh. This can be done by th
 
 In the boot folder of the sd card, create a new file with the following name:
 
-'''
+```
 ssh
-'''
+```
 
 If you are planning to use Wifi like me, then you will need to create a file with your Wifi credentials in the boot directory of the sd card. This can be done as follow:
 
 Create a file called:
 
-'''
+```
 wpa_supplicant.conf
-'''
+```
 
 Place the following details in it:
 
-'''
+```
 country=CA
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
@@ -30,7 +30,7 @@ network={
         psk="younetworkpassword"
         key_mgmt=WPA-PSK
 }
-'''
+```
 
 including the quotes!
 
@@ -193,3 +193,8 @@ Using SMB (CIFS)
 //192.168.86.2/Pi_Cam/Camera1 /home/pi/PiCam cifs -o uid=109,gid=113,credentials=/home/pi/.cifs,x-systemd.automount,iocharset=utf8,noperm 0  0
 
 ```
+
+##TEST
+//192.168.86.2/Pi_Cam/Camera1 /home/pi/PiCam cifs -o uid=109,gid=113,forceuid,forcegid,credentials=/home/pi/.cifs,file_mode=0777,dir_mode=0777,x-systemd.automount,iocharset=utf8,noperm 0  0
+
+sudo mount 192.168.86.2:/mnt/user/Pi_Cam/Camera1 /home/pi/PiCam
