@@ -119,18 +119,18 @@ sudo nano /etc/motion/motion.conf
 
 #The notable modifications to this file are the following:
 
-1. The daemon option is set to on.
-2. Set the stream_quality to 100.
-3. stream_localhost to off.
-4. webcontrol_localhost to off.
-5. Set the quality to 100.
-6. Set the width to 640 and the height to 480.
-7. Set pre_capture and post_capture to 2.
-8. Uncomment mmalcam_name vc.ril.camera if you are using the RaspberryPi camera.
-9. Change the target_dir parameters to where you want to save your videos/images.
-10. Set locate_motion_mode to on.
-11. Set locate_motion_style to redbox.
-12. Set text_changes to on.
+1. The daemon option is set to on
+2. Set the stream_quality to 100
+3. stream_localhost to off
+4. webcontrol_localhost to off
+5. Set the quality to 100
+6. Set the width to 640 and the height to 480
+7. Set pre_capture and post_capture to 2
+8. Uncomment mmalcam_name vc.ril.camera if you are using the RaspberryPi camera
+9. Change the target_dir parameters to where you want to save your videos/images. My examples uses /home/pi/PiCam
+10. Set locate_motion_mode to on
+11. Set locate_motion_style to redbox
+12. Set text_changes to on
 
 ## Enable the motion daemon:
 
@@ -156,26 +156,19 @@ sudo motion
 
 ## (Optional) Mount a Remote SAMBA Share
 
-This can be useful if you're storing large sized images for simply recording the non-stop.
+This can be useful if you're storing large sized images for simply recording the non-stop. However, it requires that you have a computer or server that runs 24/7 and supports the NFS file sharing protocol. You can potentially use Samba, but I will not include a guide to do that within here.
 
-You can testing mounting the share by running the following command on your RaspberryPi
-
-Using SMB (CIFS):
-
-```
-sudo mount -t cifs -o user=<username>,password=<password> //192.168.86.2/Pi_Cam/Camera1 /home/pi/PiCam
-sudo mount -t cifs -o uid=109,gid=113,credentials=/home/pi/.cifs,forceuid,forcegid //192.168.86.2/Pi_Cam/Camera1 /home/pi/PiCam
-```
+You can testing mounting the share by running the following command on your RaspberryPi:
 
 Using NFS:
 
-'''
-sudo mount -t nfs //192.168.86.2:/Pi_Cam/Camera1 /home/pi/PiCam
-'''
+```
+sudo mount 192.168.86.2:/mnt/user/Pi_Cam/Camera1 /home/pi/PiCam
+```
 
-This will mount the folder /PiCam/Camera1 from a server to the folder /home/pi/PiCam on your RaspberryPi
+This will mount the folder mnt/user/PiCam/Camera1 from a server to the folder /home/pi/PiCam on your RaspberryPi.
 
-You can verify this worked by placing a test file in /PiCam/Camera1 and navigating to /home/pi/PiCam on the Pi
+You can verify this worked by placing a test file in mnt/user/PiCam/Camera1 and navigating to /home/pi/PiCam on the Pi
 
 In order for this to work reliably, we'll want to do this whenever the Pi is restarted.
 
@@ -187,14 +180,10 @@ sudo nano /etc/fstab
 
 and adding the following line to the bottom of the file
 
-Using SMB (CIFS)
+Using NFS:
 
 ```
-//192.168.86.2/Pi_Cam/Camera1 /home/pi/PiCam cifs -o uid=109,gid=113,credentials=/home/pi/.cifs,x-systemd.automount,iocharset=utf8,noperm 0  0
+192.168.86.2:/mnt/user/Pi_Cam/Camera1 /home/pi/PiCam nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0 
 
 ```
 
-##TEST
-//192.168.86.2/Pi_Cam/Camera1 /home/pi/PiCam cifs -o uid=109,gid=113,forceuid,forcegid,credentials=/home/pi/.cifs,file_mode=0777,dir_mode=0777,x-systemd.automount,iocharset=utf8,noperm 0  0
-
-sudo mount 192.168.86.2:/mnt/user/Pi_Cam/Camera1 /home/pi/PiCam
