@@ -76,9 +76,9 @@ For more information see here: [Crontab Ref](https://www.raspberrypi.org/documen
 
 Once connected to the RaspberryPi, run the following command to open raspi-config
 
-'''
+```
 sudo raspi-config
-'''
+```
 
 Main things that need to be done:
 
