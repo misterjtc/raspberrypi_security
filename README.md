@@ -105,7 +105,7 @@ We can load this by default on Raspberry Pi start-up by modifying the modules fi
 sudo nano /etc/modules
 ```
 
-#and add the following to the bottom of the file:
+and add the following to the bottom of the file:
 
 ```
 bcm2835-v4l2
@@ -127,7 +127,7 @@ The notable modifications to this file are the following:
 6. Set the width to 640 and the height to 480
 7. Set pre_capture and post_capture to 2
 8. Uncomment mmalcam_name vc.ril.camera if you are using the RaspberryPi camera
-9. Change the target_dir parameters to where you want to save your videos/images. My examples uses /home/pi/PiCam
+9. Change the target_dir parameters to where you want to save your videos/images. My example uses /home/pi/PiCam
 10. Set locate_motion_mode to on
 11. Set locate_motion_style to redbox
 12. Set text_changes to on
@@ -154,11 +154,11 @@ Then use the command:
 sudo motion
 ```
 
-## (Optional) Mount a Remote SAMBA Share
+## (Optional) Mount a Remote NFS Share
 
 This can be useful if you're storing large sized images for simply recording the non-stop. However, it requires that you have a computer or server that runs 24/7 and supports the NFS file sharing protocol. You can potentially use Samba, but I will not include a guide to do that within here.
 
-You can testing mounting the share by running the following command on your RaspberryPi:
+You can test mounting the share by running the following command on your RaspberryPi:
 
 Using NFS:
 
@@ -178,7 +178,7 @@ To do this, we modify the fstab file by doing the following
 sudo nano /etc/fstab
 ```
 
-and adding the following line to the bottom of the file
+and add the following line to the bottom of the file
 
 Using NFS:
 
