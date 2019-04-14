@@ -58,7 +58,7 @@ Obtain superuser privlidges
 sudo su
 ```
 
-#Edit the superuser crontab
+Edit the superuser crontab
 
 ```
 crontab -e
@@ -107,17 +107,17 @@ sudo nano /etc/modules
 
 #and add the following to the bottom of the file:
 
-'''
+```
 bcm2835-v4l2
-'''
+```
 
 ## Make Necessary Changes to Motion.conf File
 
-'''
+```
 sudo nano /etc/motion/motion.conf
-'''
+```
 
-#The notable modifications to this file are the following:
+The notable modifications to this file are the following:
 
 1. The daemon option is set to on
 2. Set the stream_quality to 100
@@ -134,9 +134,9 @@ sudo nano /etc/motion/motion.conf
 
 ## Enable the motion daemon:
 
-'''
+```
 sudo nano /etc/default/motion
-'''
+```
 
 Set 'start_motion_daemon' to yes.
 
@@ -144,15 +144,15 @@ Set 'start_motion_daemon' to yes.
 
 After we finish editing our configuration, we need to restart the motion service. Use the following command:
 
-'''
+```
 sudo service motion restart
-'''
+```
 
 Then use the command:
 
-'''
+```
 sudo motion
-'''
+```
 
 ## (Optional) Mount a Remote SAMBA Share
 
