@@ -131,6 +131,7 @@ The notable modifications to this file are the following:
 10. Set locate_motion_mode to on
 11. Set locate_motion_style to redbox
 12. Set text_changes to on
+13. I am currently testing "minimum_motion_frames 5" to reduce the number of erroneous motion events from light changes throughout the day.
 
 ## Enable the Motion Daemon:
 
