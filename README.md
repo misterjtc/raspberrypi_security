@@ -1,8 +1,8 @@
 <p align="center">
 	<img src="https://ptpimg.me/399pk8.png" alt="misterjtc logo" width="450">
 </p>
-<h3 align="center">Build your own security system<!-- Serve Confidently --></h3>
-<p align="center">This is a custom opensource security camera solution</p>
+<h3 align="center">Raspberry Pi Home Security Camera<!-- Serve Confidently --></h3>
+<p align="center">This is a custom 3D printed raspberry pi camera solution</p>
 
 # How to Install and Configure Motion on RaspberryPi
 =============
