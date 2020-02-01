@@ -4,6 +4,12 @@
 <h3 align="center">Raspberry Pi Home Security Camera<!-- Serve Confidently --></h3>
 <p align="center">This is a custom 3D printed raspberry pi camera solution</p>
 
+---
+
+This project uses **open-source** software to deliver a cost effective home security solution.
+
+The pieces of software used in this project are highly flexible and can likely be adapted to your configuration although it may deviate from what I have outlined below.
+
 # How to Install and Configure Motion on RaspberryPi
 =============
 
