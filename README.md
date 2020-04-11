@@ -6,11 +6,11 @@
 
 ---
 
-This project uses **open-source** software to deliver a cost effective home security solution.
+This project uses **open-source** software to deliver a cost effective home security solution with motion detection.
 
 The pieces of software used in this project are highly flexible and can likely be adapted to your configuration although it may deviate from what I have outlined below.
 
-# How to Install and Configure Motion on RaspberryPi
+# How to Configure the RaspberryPi
 =============
 
 ## (OPTIONAL) Configure Headless Access
@@ -97,135 +97,110 @@ Main things that need to be done:
 1. Change your account password
 2. Enable the camera
 
-## Install Motion
+You can confirm that your camera is connected and enabled by running the following command:
 
 ```
-sudo apt-get install motion
+v4l2-ctl --list-formats
 ```
 
-## Install Raspberry Pi Camera Dependencies
-
-In order to use to Raspberry Pi Camera after installing motion using apt-get. We need to load the camera module. This is done by typing the following command:
+You should see something like this:
 
 ```
-sudo modprobe bcm2835-v4l2
+ioctl: VIDIOC_ENUM_FMT
+        Type: Video Capture
+
+        [0]: 'YU12' (Planar YUV 4:2:0)
+        [1]: 'YUYV' (YUYV 4:2:2)
+        [2]: 'RGB3' (24-bit RGB 8-8-8)
+        [3]: 'JPEG' (JFIF JPEG, compressed)
+        [4]: 'H264' (H.264, compressed)
+        [5]: 'MJPG' (Motion-JPEG, compressed)
+        [6]: 'YVYU' (YVYU 4:2:2)
+        [7]: 'VYUY' (VYUY 4:2:2)
+        [8]: 'UYVY' (UYVY 4:2:2)
+        [9]: 'NV12' (Y/CbCr 4:2:0)
+        [10]: 'BGR3' (24-bit BGR 8-8-8)
+        [11]: 'YV12' (Planar YVU 4:2:0)
+        [12]: 'NV21' (Y/CrCb 4:2:0)
+        [13]: 'BGR4' (32-bit BGRA/X 8-8-8-8)
 ```
 
-We can load this by default on Raspberry Pi start-up by modifying the modules file by doing the following:
+## Install v4l2rtspserver
 
 ```
-sudo nano /etc/modules
+sudo apt-get install cmake liblog4cpp5-dev libv4l-dev git
 ```
 
-and add the following to the bottom of the file:
-
 ```
-bcm2835-v4l2
-```
-
-## Make Necessary Changes to Motion.conf File
-
-```
-sudo nano /etc/motion/motion.conf
+git clone https://github.com/mpromonet/v4l2rtspserver.git
+cd v4l2rtspserver/
+cmake .
+make
+sudo make install
 ```
 
-The notable modifications to this file are the following:
-
-1. The daemon option is set to on
-2. Set the stream_quality to 100
-3. stream_localhost to off
-4. webcontrol_localhost to off
-5. Set the quality to 100
-6. Set the width to 640 and the height to 480
-7. Set pre_capture and post_capture to 2
-8. Uncomment mmalcam_name vc.ril.camera if you are using the RaspberryPi camera
-9. Change the target_dir parameters to where you want to save your videos/images. My example uses /home/pi/PiCam
-10. Set locate_motion_mode to on
-11. Set locate_motion_style to redbox
-12. Set text_changes to on
-13. I am currently testing "minimum_motion_frames 5" to reduce the number of erroneous motion events from light changes throughout the day.
-
-## Enable the Motion Daemon:
+## Test v4l2rtspserver:
 
 ```
-sudo nano /etc/default/motion
+v4l2rtspserver -H 972 -W 1296 -F 15 -P 8554 /dev/video0
 ```
 
-Set 'start_motion_daemon' to yes.
+This command provides you with an image of 1296x972 with 15 fps
 
-## Restart Motion and Test!
+## View the stream:
 
-After we finish editing our configuration, we need to restart the motion service. Use the following command:
-
-```
-sudo service motion restart
-```
-
-Then use the command:
+The video stream will become available at the following address:
 
 ```
-sudo motion
+rtsp://<raspberry-pi-ip>:8554/unicast
 ```
 
-## (Optional) Mount a Remote NFS Share
+You can view the stream by using the above link in VLC player. Media --> Open Network Stream ...
 
-This can be useful if you're storing large sized images for simply recording the non-stop. However, it requires that you have a computer or server that runs 24/7 and supports the NFS file sharing protocol. You can potentially use Samba, but I will not include a guide to do that within here.
+## Launch v4l2rtspserver on startup:
 
-You can test mounting the share by running the following command on your RaspberryPi:
-
-Using NFS:
+To start v4l2rtspserver on boot we need to modify the v4l2rtspserver.service with our stream configuration.
 
 ```
-sudo mount 192.168.86.2:/mnt/user/Pi_Cam/Camera1 /home/pi/PiCam
+sudo nano /lib/systemd/system/v4l2rtspserver.service
 ```
 
-This will mount the folder mnt/user/PiCam/Camera1 from a server to the folder /home/pi/PiCam on your RaspberryPi.
-
-You can verify this worked by placing a test file in mnt/user/PiCam/Camera1 and navigating to /home/pi/PiCam on the Pi
-
-In order for this to work reliably, we'll want to do this whenever the Pi is restarted.
-
-To do this, we modify the fstab file by doing the following
+We need to add our run command 
 
 ```
-sudo nano /etc/fstab
+v4l2rtspserver -H 972 -W 1296 -F 15 -P 8554 /dev/video0
 ```
 
-and add the following line to the bottom of the file
-
-Using NFS:
+The v4l2rtspserver.service file should look like this:
 
 ```
-192.168.86.2:/mnt/user/Pi_Cam/Camera2 /home/pi/PiCam nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0 
+[Unit]
+Description=V4L2 RTSP server
+After=network.target
 
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=pi
+ExecStart=/usr/local/bin/v4l2rtspserver -F15 -H 972 -W1296 -P 8554 /dev/video0
+WorkingDirectory=/usr/local/share/v4l2rtspserver
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target
 ```
 
-## (Optional) Send a Slack Notification When Motion is Detected
-
-You can configure MotionEye OS to send a slack notification whenever any camera detects motion.
-
-This uses a python script created by Wesley Archer at Raspberry Coulis. You can find a base version of the script in the slack.py file or see his Github Repo below:
-
-For more information see here: [raspberrycoulis/slack-motioneyeos-notifications](https://github.com/raspberrycoulis/slack-motioneyeos-notifications)
-
-## (Optional) Using Docker? How to Access the Container.
-
-SSH into your server.
-
-Use the following command to see all existing docker containers:
+## Activate v4l2rtspserver on boot:
 
 ```
-docker ps
+sudo systemctl enable v4l2rtspserver
 ```
 
-To ssh into a specific container, use the following command:
+## Rotate camera:
+
+If you need to rotate the camera output, you can use something like this:
 
 ```
-docker exec -it <container name> /bin/bash
-```
-
-In my case this is:
-
-```
-docker exec -it MotionEye /bin/bash
+v4l2-ctl --set-ctrl=rotate=180
 ```
